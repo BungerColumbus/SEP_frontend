@@ -27,37 +27,27 @@ h1 {
 
 .controls {
   display: flex;
-  gap: 0.75rem;
+  gap: 1.25rem;
   align-items: center;
   flex-wrap: wrap;
   margin-bottom: 1.25rem;
 }
 
-button {
-  padding: 0.5rem 1rem;
+.limit-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 0.95rem;
-  border: 1px solid #cbd2d9;
-  border-radius: 6px;
-  background: #fff;
-  cursor: pointer;
 }
 
-button:hover {
-  background: #f0f2f5;
+.limit-control input[type="range"] {
+  accent-color: #4f7cd4;
+  width: 12rem;
 }
 
-.file-label {
-  padding: 0.5rem 1rem;
-  font-size: 0.95rem;
-  border: 1px solid #cbd2d9;
-  border-radius: 6px;
-  background: #fff;
-  cursor: pointer;
-  display: inline-block;
-}
-
-.file-label input {
-  display: none;
+.summary {
+  color: #52606d;
+  font-size: 0.9rem;
 }
 
 .chart-card {
@@ -65,17 +55,16 @@ button:hover {
   border: 1px solid #e4e7eb;
   border-radius: 10px;
   padding: 1rem;
-  min-height: 420px;
 }
 
-#chart {
+.chart-card + .chart-card {
+  margin-top: 1.25rem;
+}
+
+.chart-canvas {
   width: 100%;
-  height: 420px;
-}
-
-.status {
-  color: #d0453c;
-  margin: 0 0 1rem;
+  height: 360px;
+  display: block;
 }
 
 .hint {

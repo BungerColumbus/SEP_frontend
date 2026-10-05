@@ -1,18 +1,10 @@
-import { CsvChart } from './components/CsvChart'
+import { RadiationChart } from './components/RadiationChart'
 
 export function App() {
   return (
     <main className="container">
-      <h1>SEP Frontend</h1>
-      <p className="subtitle">
-        React + PapaParse + ECharts, bundled with esbuild.
-      </p>
-      <CsvChart />
-      <p className="hint">
-        Upload any CSV with a header row: the first column becomes the
-        x-axis, every numeric column becomes a series. Try
-        <code> public/sample.csv</code> via the button above.
-      </p>
+      <h1>Histograms and Line charts for the current radiation dose of participants</h1>
+      <RadiationChart />
     </main>
   )
 }
