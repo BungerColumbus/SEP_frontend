@@ -2,11 +2,8 @@ import { useEffect, useMemo, useRef } from 'react'
 import Chart from 'chart.js/auto'
 import type { ChartConfiguration, Plugin } from 'chart.js'
 // graab the sample data
-import { RADIATION_DOSES } from '../data/radiationData'
+import type { RadiationDose } from '../data/radiationData'
 import { WITHIN_COLOR, ABOVE_COLOR, LIMIT_COLOR } from './chartColors'
-
-// every dose from radiation doses
-const DOSES = RADIATION_DOSES.map((entry) => entry.dose)
 
 // All the data needed for a histogram
 interface Histogram {
@@ -153,13 +150,14 @@ ChartConfiguration<'bar'> {
 }
 
 // the histogram chart component
-export function HistogramChart({ limit }: { limit: number }) {
+export function HistogramChart({limit, entries}: {limit: number, entries: RadiationDose[]}) 
+{
   // the canvas element and the chart.js instance
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const chart = useRef<Chart | null>(null)
   const limitRef = useRef(limit)
   // I would have not used memo if it wasn't for the LLM ngl
-  const histogram = useMemo(() => makeHistogram(DOSES), [])
+  const histogram = useMemo(() => makeHistogram(entries.map((entry) => entry.dose)), [entries])
 
   // create the chart once
   useEffect(() => {

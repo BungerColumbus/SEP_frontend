@@ -2,21 +2,20 @@ import { useEffect, useMemo, useRef } from 'react'
 import Chart from 'chart.js/auto'
 import type { ChartConfiguration, ChartDataset } from 'chart.js'
 // graab the sample data
-import { RADIATION_DOSES } from '../data/radiationData'
 import type { RadiationDose } from '../data/radiationData'
 import { WITHIN_COLOR, WITHIN_LINE, ABOVE_COLOR, LIMIT_COLOR } from './chartColors'
 
 // makes the config for the line chart view
-function makeLineConfig(
-  sorted: RadiationDose[],
-  limitRef: { current: number },
-): ChartConfiguration<'line'> {
+function makeLineConfig(sorted: RadiationDose[], limitRef: { current: number }): 
+ChartConfiguration<'line'> 
+{
   const limit = limitRef.current
   return {
     type: 'line',
     data: {
-      // X-axis is the accumulated participant count (1..N) in dose order.
-      labels: sorted.map((_, index) => index + 1),
+      // X-axis is the participant IDs in dose order, so each
+      // dot on the line directly represents one participant.
+      labels: sorted.map((entry) => entry.participant),
       datasets: [
         {
           // the dose of each participant, sorted low -> high
@@ -28,6 +27,11 @@ function makeLineConfig(
             entry.dose > limit ? ABOVE_COLOR : WITHIN_COLOR,
           ),
           pointRadius: 2,
+          // grow the dot when hovering it, so the participant is easy to find
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: sorted.map((entry) =>
+            entry.dose > limit ? LIMIT_COLOR : WITHIN_LINE,
+          ),
           // red line segments when they go above the limit
           segment: {
             borderColor: (ctx) => {
@@ -53,11 +57,23 @@ function makeLineConfig(
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
-      plugins: { legend: { position: 'bottom' } },
+      plugins: {
+        legend: { position: 'bottom' },
+        tooltip: {
+          callbacks: {
+            // the tooltip title is the participant ID of the hovered dot
+            title: (items) => {
+              const first = items[0]
+              return first ? first.label : ''
+            },
+            label: (item) => ` ${item.dataset.label}: ${(item.parsed.y == null ? 0 : item.parsed.y).toFixed(2)} mSv`,
+          },
+        },
+      },
       scales: {
         x: {
-          title: { display: true, text: 'Nr of participants (sorted by dose)' },
-          ticks: { autoSkip: true, maxTicksLimit: 12 },
+          title: { display: true, text: 'Participant ID (sorted by dose)' },
+          ticks: { display: false, maxTicksLimit: 12 }
         },
         y: {
           title: { display: true, text: 'Cumulative dose (mSv)' },
@@ -69,7 +85,8 @@ function makeLineConfig(
 }
 
 // the line chart component
-export function LineChart({ limit }: { limit: number }) {
+export function LineChart({limit, entries}: {limit: number, entries: RadiationDose[]}) 
+{
   // the canvas element and the chart.js instance
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const chart = useRef<Chart | null>(null)
@@ -77,8 +94,8 @@ export function LineChart({ limit }: { limit: number }) {
   const limitRef = useRef(limit)
   // participants sorted by dose, computed once because the data never changes
   const sorted = useMemo(
-    () => RADIATION_DOSES.slice().sort((a, b) => a.dose - b.dose),
-    [],
+    () => entries.slice().sort((a, b) => a.dose - b.dose),
+    [entries],
   )
 
   // create the chart once
