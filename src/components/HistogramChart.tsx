@@ -62,10 +62,8 @@ function makeHistogram(doses: number[]): Histogram {
 
 // Vertical limit line drawn over the histogram's category axis:
 // dose d sits at fraction d / (binWidth * binCount) of the x-axis.
-function makeLimitLinePlugin(
-  limitRef: { current: number },
-  histogram: Histogram,
-): Plugin<'bar'> {
+function makeLimitLinePlugin(limitRef: { current: number }, histogram: Histogram): 
+Plugin<'bar'> {
   return {
     id: 'limitLine',
     afterDatasetsDraw(chart) {
@@ -98,10 +96,8 @@ function makeLimitLinePlugin(
 }
 
 // makes the config for the histogram view
-function makeHistogramConfig(
-  histogram: Histogram,
-  limitRef: { current: number },
-): ChartConfiguration<'bar'> {
+function makeHistogramConfig(histogram: Histogram, limitRef: { current: number }): 
+ChartConfiguration<'bar'> {
   const limit = limitRef.current
   return {
     type: 'bar',

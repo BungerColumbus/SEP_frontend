@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { RADIATION_DOSES } from '../data/radiationData'
 import { HistogramChart } from './HistogramChart'
 import { LineChart } from './LineChart'
+import { StatusChart } from './StatusChart'
 
 // the default dose limit for the slider
 const DEFAULT_LIMIT = 5
@@ -39,6 +40,7 @@ export function RadiationChart() {
       </div>
       <HistogramChart limit={limit} />
       <LineChart limit={limit} />
+      <StatusChart limit={limit} />
     </section>
   )
 }
