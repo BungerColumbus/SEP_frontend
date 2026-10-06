@@ -6,7 +6,7 @@ import { RADIATION_DOSES } from '../data/radiationData'
 import { WITHIN_COLOR, ABOVE_COLOR, WARN_COLOR } from './chartColors'
 
 // the radiation status categories that were also used in the BEP
-const CATEGORY_LABELS = [
+export const CATEGORY_LABELS = [
   'Below threshold',
   'Will exceed threshold',
   'Exceeding threshold',
@@ -14,10 +14,10 @@ const CATEGORY_LABELS = [
 
 // participants above this fraction of the limit are expected to cross
 // the threshold before the study ends (only the cumulative dose is known)
-const PROJECTION_FRACTION = 0.75
+export const PROJECTION_FRACTION = 0.75
 
 // just counts the participants in each status category
-function countByStatus(doses: number[], limit: number): number[] {
+export function countByStatus(doses: number[], limit: number): number[] {
   const projectedLimit = limit * PROJECTION_FRACTION
   const counts = [0, 0, 0]
   for (const dose of doses) {
@@ -103,7 +103,6 @@ export function StatusChart({ limit }: { limit: number }) {
     // later limit changes are handled by the update effect below
   }, [])
 
-  // recount the categories when the limit moves
   useEffect(() => {
     const current = chart.current
     if (!current) return
